@@ -5,6 +5,18 @@ const connectDB = require("../src/config/db");
 let handler;
 
 module.exports = async (req, res) => {
-  return res.json({ message: "Server is alive" });
-};
+  try {
+    await connectDB(); // thử connect DB
+  } catch (err) {
+    return res.status(500).json({
+      error: "Database connection failed",
+      details: err.message
+    });
+  }
 
+  if (!handler) {
+    handler = serverless(app);
+  }
+
+  return handler(req, res);
+};

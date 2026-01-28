@@ -5,14 +5,10 @@ const connectDB = require("../src/config/db");
 
 let handler;
 
-// connect ngay khi module được load
-(async () => {
-  try {
-    await connectDB();
-  } catch (err) {
-    console.error("❌ Initial DB connection failed:", err.message);
-  }
-})();
+// connect DB khi module load
+connectDB().catch(err => {
+  console.error("❌ DB connect failed:", err.message);
+});
 
 module.exports = (req, res) => {
   if (!handler) {

@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected || mongoose.connection.readyState === 1) {
+    return;
+  }
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 3000, // 🔥 fail nhanh nếu không connect được
       maxPoolSize: 5,
     });
-
     isConnected = true;
     console.log("✅ MongoDB connected");
   } catch (err) {

@@ -8,7 +8,8 @@ exports.createMovie = (data) => {
 // Lấy phim theo category + sắp xếp thứ tự
 exports.findByCategory = (category) => {
   return Movie.find({ category })
-    .sort({ order: 1, createdAt: -1 });
+    .sort({ order: 1, createdAt: -1 })
+    .maxTimeMS(5000); 
 };
 
 // Lấy phim theo slug (path)

@@ -6,27 +6,28 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
-const connectDB = async () => {
-  if (cached.conn) {
-    return cached.conn; // đã có kết nối thì dùng lại
-  }
+async function connectDB() {
+  if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGO_URI, {
+    const opts = {
       bufferCommands: false,
-    }).then((mongoose) => mongoose);
+      serverSelectionTimeoutMS: 5000, 
+    };
+
+    cached.promise = mongoose.connect(process.env.MONGO_URI, opts)
+      .then((mongoose) => {
+        console.log("✅ MongoDB connected");
+        return mongoose;
+      })
+      .catch(err => {
+        console.error("❌ MongoDB connection error:", err.message);
+        throw err;
+      });
   }
 
-  try {
-    cached.conn = await cached.promise;
-    console.log("✅ MongoDB connected");
-  } catch (err) {
-    cached.promise = null;
-    console.error("❌ MongoDB connection failed:", err.message);
-    throw err;
-  }
-
+  cached.conn = await cached.promise;
   return cached.conn;
-};
+}
 
 module.exports = connectDB;

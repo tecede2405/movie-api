@@ -3,10 +3,7 @@ const mongoose = require("mongoose");
 const MONGO_URI = process.env.MONGO_URI;
 
 let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+if (!cached) cached = global.mongoose = { conn: null, promise: null };
 
 async function connectDB() {
   if (cached.conn) return cached.conn;

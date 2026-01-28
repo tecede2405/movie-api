@@ -8,8 +8,8 @@ module.exports = async (req, res) => {
   try {
     await connectDB();
   } catch (err) {
-    console.error("DB ERROR:", err.message);
-    return res.status(500).json({ error: "DB connection failed" });
+    console.error("❌ DB ERROR:", err.message);
+    return res.status(500).json({ error: "Database connection failed" });
   }
 
   if (!handler) {
